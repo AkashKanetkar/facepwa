@@ -1,10 +1,10 @@
 const cacheName = 'face-detection-pwa-v1';
 const filesToCache = [
-  '/',
-  '/index.html',
-  '/scripts/face-api.min.js',
-  '/scripts/script.js',
-  '/styles/style.css'
+  '/facepwa/',
+  '/facepwa/index.html',
+  '/facepwa/scripts/face-api.min.js',
+  '/facepwa/scripts/script.js',
+  '/facepwa/styles/style.css'
 ];
 
 self.addEventListener('install', (e) => {

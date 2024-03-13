@@ -1,5 +1,5 @@
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
+  navigator.serviceWorker.register('/facepwa/service-worker.js')
     .then((registration) => {
       console.log('Service Worker registered with scope:', registration.scope);
     })
@@ -11,8 +11,8 @@ if ('serviceWorker' in navigator) {
 const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+  faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models"),
 ]).then(startWebcam);
 
 function startWebcam() {
