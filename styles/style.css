@@ -1,5 +1,4 @@
 body {
-
     margin: 0;
     padding: 0;
     width: 100vw;
@@ -7,8 +6,26 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-canvas {
-    position: absolute
-}
+    background-color: #f0f0f0; /* Set a background color for the body */
+  }
+  
+  canvas {
+    position: absolute;
+    border: 1px solid #ccc; /* Add a border to the canvas */
+    border-radius: 8px; /* Add border-radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    max-width: 100%; /* Ensure the canvas doesn't overflow its container */
+    max-height: 100%; /* Ensure the canvas doesn't overflow its container */
+  }
+  
+  #controlButton {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    touch-action: manipulation; /* Enables fast tap highlighting on touch devices */
+    user-select: none; /* Disable text selection on long press */
+    -webkit-tap-highlight-color: transparent; /* Removes tap highlight on WebKit browsers */
+    -moz-user-select: none; /* Disable text selection on long press for older Firefox versions */
+  }
+  
