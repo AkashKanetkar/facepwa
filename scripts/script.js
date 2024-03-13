@@ -1,9 +1,7 @@
-// script.js
-
 document.addEventListener("DOMContentLoaded", function () {
   const video = document.getElementById("video");
   const statusDiv = document.getElementById("status");
-  const controlButton = document.getElementById("controlButton");
+  const controlButton = document.getElementById("controlButton"); // Added this line
 
   let isOccupied = false;
   let detectionInterval;
