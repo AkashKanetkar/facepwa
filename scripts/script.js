@@ -18,8 +18,8 @@ let lastFaceDetectionTime = 0;
 let waitingTimeoutId;
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+  faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models"),
 ]).then(() => {
   // Wait for the start button click to initialize the webcam and face detection
   startButton.addEventListener("click", startSeatOccupancy);
