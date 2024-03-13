@@ -10,16 +10,20 @@ if ('serviceWorker' in navigator) {
 
 const video = document.getElementById("video");
 const statusElement = document.getElementById("status");
-const waitingTimeout = 7000; // 9 seconds
+const startButton = document.getElementById("startButton");
+const waitingTimeout = 7000; // 7 seconds
 const displayDelay = 6500; // 6.5 seconds
 
 let lastFaceDetectionTime = 0;
 let waitingTimeoutId;
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models"),
-]).then(startWebcam);
+  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+]).then(() => {
+  // Wait for the start button click to initialize the webcam and face detection
+  startButton.addEventListener("click", startSeatOccupancy);
+});
 
 function startWebcam() {
   navigator.mediaDevices
@@ -46,36 +50,40 @@ function startWebcam() {
     });
 }
 
-video.addEventListener("play", () => {
-  const canvas = faceapi.createCanvasFromMedia(video);
-  document.body.append(canvas);
-  faceapi.matchDimensions(canvas, { height: video.height, width: video.width });
+function startSeatOccupancy() {
+  startWebcam();
 
-  setInterval(async () => {
-    const detections = await faceapi
-      .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-      .withFaceLandmarks();
+  video.addEventListener("play", () => {
+    const canvas = faceapi.createCanvasFromMedia(video);
+    document.body.append(canvas);
+    faceapi.matchDimensions(canvas, { height: video.height, width: video.width });
 
-    const currentTime = Date.now();
+    setInterval(async () => {
+      const detections = await faceapi
+        .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks();
 
-    if (detections.length > 0) {
-      // Face detected
-      lastFaceDetectionTime = currentTime;
-      showOccupiedStatus();
-    } else {
-      // No face detected
-      const elapsedTimeSinceLastDetection = currentTime - lastFaceDetectionTime;
+      const currentTime = Date.now();
 
-      if (elapsedTimeSinceLastDetection < waitingTimeout) {
-        // Still within the waiting timeout, show "Waiting..."
-        showWaitingStatus();
+      if (detections.length > 0) {
+        // Face detected
+        lastFaceDetectionTime = currentTime;
+        showOccupiedStatus();
       } else {
-        // Waiting timeout exceeded, show "Seat not occupied"
-        showNotOccupiedStatus();
+        // No face detected
+        const elapsedTimeSinceLastDetection = currentTime - lastFaceDetectionTime;
+
+        if (elapsedTimeSinceLastDetection < waitingTimeout) {
+          // Still within the waiting timeout, show "Waiting..."
+          showWaitingStatus();
+        } else {
+          // Waiting timeout exceeded, show "Seat not occupied"
+          showNotOccupiedStatus();
+        }
       }
-    }
-  }, 100); // Set the interval duration to 100 milliseconds
-});
+    }, 100); // Set the interval duration to 100 milliseconds
+  });
+}
 
 function showOccupiedStatus() {
   statusElement.textContent = "Seat occupied";
@@ -86,9 +94,9 @@ function showNotOccupiedStatus() {
 }
 
 function showWaitingStatus() {
+  statusElement.style.display = "block"; // Show the status element
   statusElement.textContent = "Waiting...";
 }
-
 
 
 

@@ -15,34 +15,17 @@
 </body>
 </html> -->
 
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Face detection on the browser using javascript !</title>
-  <script defer src="face-api.min.js"></script>
-  <script defer src="script.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <video id="video" width="600" height="450" autoplay>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Face detection on the browser using JavaScript!</title>
+  <title>Face Detection PWA</title>
   <link rel="manifest" href="/facepwa/manifest.webmanifest"/>
   <script defer src="/facepwa/scripts/face-api.min.js"></script>
   <script defer src="/facepwa/scripts/script.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/facepwa/styles/style.css">
   <style>
     body {
       display: flex;
@@ -60,13 +43,21 @@
       font-size: 20px;
       font-weight: bold;
       color: #333;
+      display: none; /* initially hide the status */
+    }
+
+    #startButton {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
   <video id="video" width="600" height="450" autoplay></video>
-  <div id="status">Status: Waiting...</div>
+<div id="status">Status: Waiting...</div>
+  <button id="startButton" onclick="startSeatOccupancy()">Start Seat Occupancy Detection</button>
 </body>
-
 </html>
