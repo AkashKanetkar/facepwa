@@ -1,68 +1,138 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const video = document.getElementById("video");
-  const statusDiv = document.getElementById("status");
-  const controlButton = document.getElementById("controlButton"); // Added this line
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/facepwa/service-worker.js')
+    .then((registration) => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch((error) => {
+      console.error('Service Worker registration failed:', error);
+    });
+}
 
-  let isOccupied = false;
-  let detectionInterval;
+const video = document.getElementById("video");
+const statusElement = document.getElementById("status");
+const waitingTimeout = 7000; // 9 seconds
+const displayDelay = 6500; // 6.5 seconds
 
-  async function startDetection() {
-    try {
-      await faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models");
-      await faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models");
+let lastFaceDetectionTime = 0;
+let waitingTimeoutId;
 
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-          controlButton.innerText = "Stop Seat Occupancy Detection";
-          isOccupied = false;
-          statusDiv.innerText = "Status: Waiting...";
-          detectionInterval = setInterval(checkSeatOccupancy, 5000);
-        })
-        .catch((error) => {
-          console.error(error);
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models"),
+]).then(startWebcam);
+
+function startWebcam() {
+  navigator.mediaDevices
+    .enumerateDevices()
+    .then((devices) => {
+      const videoDevices = devices.filter((device) => device.kind === "videoinput");
+
+      if (videoDevices.length > 0) {
+        const deviceId = videoDevices[0].deviceId; // Change index if needed
+        return navigator.mediaDevices.getUserMedia({
+          video: { deviceId: { exact: deviceId } },
+          audio: false,
         });
-    } catch (error) {
+      } else {
+        console.error("No video devices found.");
+        throw new Error("No video devices found.");
+      }
+    })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((error) => {
       console.error(error);
-    }
-  }
+    });
+}
 
-  function stopDetection() {
-    if (detectionInterval) {
-      clearInterval(detectionInterval);
-    }
-    if (video.srcObject) {
-      const tracks = video.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-      video.srcObject = null;
-    }
-    controlButton.innerText = "Start Seat Occupancy Detection";
-  }
+video.addEventListener("play", () => {
+  const canvas = faceapi.createCanvasFromMedia(video);
+  document.body.append(canvas);
+  faceapi.matchDimensions(canvas, { height: video.height, width: video.width });
 
-  async function checkSeatOccupancy() {
+  setInterval(async () => {
     const detections = await faceapi
       .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks();
 
+    const currentTime = Date.now();
+
     if (detections.length > 0) {
       // Face detected
-      isOccupied = true;
-      statusDiv.innerText = "Status: Seat Occupied";
+      lastFaceDetectionTime = currentTime;
+      showOccupiedStatus();
     } else {
-      // Face not detected
-      isOccupied = false;
-      statusDiv.innerText = "Status: Seat Not Occupied";
-    }
-  }
+      // No face detected
+      const elapsedTimeSinceLastDetection = currentTime - lastFaceDetectionTime;
 
-  function toggleSeatOccupancy() {
-    if (!isOccupied) {
-      startDetection();
-    } else {
-      stopDetection();
+      if (elapsedTimeSinceLastDetection < waitingTimeout) {
+        // Still within the waiting timeout, show "Waiting..."
+        showWaitingStatus();
+      } else {
+        // Waiting timeout exceeded, show "Seat not occupied"
+        showNotOccupiedStatus();
+      }
     }
-  }
-
-  controlButton.addEventListener("click", toggleSeatOccupancy);
+  }, 100); // Set the interval duration to 100 milliseconds
 });
+
+function showOccupiedStatus() {
+  statusElement.textContent = "Seat occupied";
+}
+
+function showNotOccupiedStatus() {
+  statusElement.textContent = "Seat not occupied";
+}
+
+function showWaitingStatus() {
+  statusElement.textContent = "Waiting...";
+}
+
+
+
+
+
+// const video = document.getElementById("video");
+
+// Promise.all([
+//   faceapi.nets.tinyFaceDetector.loadFromUri("/facepwa/models"),
+//   faceapi.nets.faceLandmark68Net.loadFromUri("/facepwa/models"),
+// ]).then(startWebcam);
+
+// function startWebcam() {
+//   navigator.mediaDevices
+//     .getUserMedia({
+//       video: true,
+//       audio: false,
+//     })
+//     .then((stream) => {
+//       video.srcObject = stream;
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
+
+// video.addEventListener("play", () => {
+//   const canvas = faceapi.createCanvasFromMedia(video);
+//   document.body.append(canvas);
+//   faceapi.matchDimensions(canvas, { height: video.height, width: video.width });
+
+//   setInterval(async () => {
+//     const detections = await faceapi
+//       .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+//       .withFaceLandmarks();
+
+//     const resizedDetections = faceapi.resizeResults(detections, {
+//       height: video.height,
+//       width: video.width,
+//     });
+//     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+//     faceapi.draw.drawDetections(canvas, resizedDetections);
+//     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+
+//     console.log(detections);
+//   }, 100);
+// });
+

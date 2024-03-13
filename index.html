@@ -16,9 +16,24 @@
 </html> -->
 
 
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Face detection on the browser using javascript !</title>
+  <script defer src="face-api.min.js"></script>
+  <script defer src="script.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <video id="video" width="600" height="450" autoplay>
+</body>
+</html> -->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +42,7 @@
   <link rel="manifest" href="/facepwa/manifest.webmanifest"/>
   <script defer src="/facepwa/scripts/face-api.min.js"></script>
   <script defer src="/facepwa/scripts/script.js"></script>
-  <link rel="stylesheet" href="/facepwa/styles/style.css">
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       display: flex;
@@ -46,36 +61,12 @@
       font-weight: bold;
       color: #333;
     }
-
-    #canvas-container {
-      position: relative;
-    }
-
-    canvas {
-      position: absolute;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 100%;
-      max-height: 100%;
-    }
-
-    #controlButton {
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
   </style>
 </head>
 
 <body>
   <video id="video" width="600" height="450" autoplay></video>
   <div id="status">Status: Waiting...</div>
-  <div id="canvas-container"></div>
-  <button id="controlButton" onclick="toggleSeatOccupancy()">Start Seat Occupancy Detection</button>
 </body>
 
 </html>
-
-
