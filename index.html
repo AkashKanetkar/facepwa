@@ -1,20 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Face Detection PWA</title>
-  <link rel="manifest" href="/facepwa/manifest.webmanifest"/>
-  <script defer src="/facepwa/scripts/face-api.min.js"></script>
-  <script defer src="/facepwa/scripts/script.js"></script>
-  <link rel="stylesheet" href="/facepwa/styles/style.css">
-</head>
-<body>
-  <video id="video" width="600" height="450" autoplay></video>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,38 +9,9 @@
   <script defer src="/facepwa/scripts/face-api.min.js"></script>
   <script defer src="/facepwa/scripts/script.js"></script>
   <link rel="stylesheet" href="/facepwa/styles/style.css">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    #video {
-      margin-bottom: 20px;
-    }
-
-    #status {
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      display: none; /* initially hide the status */
-    }
-
-    #startButton {
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
 </head>
-
 <body>
   <video id="video" width="600" height="450" autoplay></video>
-<div id="status">Status: Waiting...</div>
-  <button id="startButton" onclick="startSeatOccupancy()">Start Seat Occupancy Detection</button>
 </body>
 </html>
+
